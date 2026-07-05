@@ -36,6 +36,12 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 # Install & build frontend assets
 RUN npm install && npm run build
 
+RUN mkdir -p /var/www/storage/framework/views \
+             /var/www/storage/framework/cache/data \
+             /var/www/storage/framework/sessions \
+             /var/www/storage/logs \
+    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+
 
 CMD php -S 0.0.0.0:$PORT -t public/
 
