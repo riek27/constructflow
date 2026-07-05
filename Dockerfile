@@ -27,5 +27,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Install project dependencies (without dev)
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Start Laravel’s built-in server
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=$PORT"]
+# Use PHP's built-in server directly (Railway sets $PORT)
+CMD php -S 0.0.0.0:$PORT -t public/
+
+
+
+
+
+
