@@ -5,43 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'ConstructFlow') }} – Commercial Management</title>
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
+
     <!-- Tailwind CSS CDN -->
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    navy: '#1E3A5F',
-                    emerald: {
-                        50: '#ECFDF5',
-                        100: '#D1FAE5',
-                        200: '#A7F3D0',
-                        300: '#6EE7B7',
-                        400: '#34D399',
-                        500: '#10B981',
-                        600: '#059669',
-                        700: '#047857',
-                        800: '#065F46',
-                        900: '#064E3B',
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#1E3A5F',
+                        emerald: {
+                            50: '#ECFDF5',
+                            100: '#D1FAE5',
+                            200: '#A7F3D0',
+                            300: '#6EE7B7',
+                            400: '#34D399',
+                            500: '#10B981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065F46',
+                            900: '#064E3B',
+                        },
+                        surface: '#F8FAFC',
+                        'dark-slate': '#1F2937',
                     },
-                    surface: '#F8FAFC',
-                    'dark-slate': '#1F2937',
                 },
             },
-        },
-    }
-</script>
-<!-- Simple CSS fallback for any remaining custom styles -->
-<style>
-    body { font-family: 'Inter', sans-serif; }
-    .sidebar-bg { background: linear-gradient(180deg, #12345A 0%, #0F2748 100%); }
-    /* Add any other custom styles you previously defined */
-</style>
-<!-- Inter font -->
-<link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
+        }
+    </script>
+
+    <!-- Alpine.js CDN (for dropdowns and interactive components) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Custom CSS (no @apply – pure CSS) -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-bg { background: linear-gradient(180deg, #12345A 0%, #0F2748 100%); }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 0.75rem;
+            color: #F8FAFC;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            transition: all 0.2s ease;
+        }
+        .sidebar-link svg {
+            width: 22px;
+            height: 22px;
+            color: #D1D5DB;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+        .sidebar-link:hover {
+            background: #2C4D79;
+            color: #FFFFFF;
+            transform: translateX(3px);
+        }
+        .sidebar-link:hover svg {
+            color: #FFFFFF;
+        }
+        .sidebar-link.active {
+            background: linear-gradient(90deg, #0F9D8A 0%, #10B981 100%);
+            color: #FFFFFF;
+            font-weight: 600;
+            border-left: 4px solid #34D399;
+            border-bottom-color: transparent;
+            box-shadow: 0 8px 24px rgba(16,185,129,.25);
+        }
+        .sidebar-link.active svg {
+            color: #FFFFFF;
+        }
+        .sidebar-link:focus-visible {
+            outline: 2px solid #34D399;
+            outline-offset: 2px;
+        }
+        .sidebar-footer {
+            color: #94A3B8;
+            border-top: 1px solid rgba(255,255,255,.08);
+        }
+    </style>
 </head>
 <body class="font-sans antialiased">
     <div class="min-h-screen flex bg-gray-100">
@@ -72,70 +123,78 @@
                         </svg>
                         Projects
                     </x-nav-link>
-@can('manage users')
+
+                    @can('manage users')
                     <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')" class="sidebar-link">
                         <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
                         Users
                     </x-nav-link>
-@endcan
-@can('manage contracts')
+                    @endcan
+
+                    @can('manage contracts')
                     <x-nav-link :href="route('contracts.index')" :active="request()->routeIs('contracts.*')" class="sidebar-link">
                         <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                         Contracts
                     </x-nav-link>
-@endcan
-@can('manage variations')
+                    @endcan
+
+                    @can('manage variations')
                     <x-nav-link :href="route('variations.index')" :active="request()->routeIs('variations.*')" class="sidebar-link">
                         <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                         </svg>
                         Variations
                     </x-nav-link>
-@endcan
-@can('manage payments')
+                    @endcan
+
+                    @can('manage payments')
                     <x-nav-link :href="route('payments.index')" :active="request()->routeIs('payments.*')" class="sidebar-link">
                         <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
                         Payments
                     </x-nav-link>
-@endcan
-@can('manage procurement')
+                    @endcan
+
+                    @can('manage procurement')
                     <x-nav-link :href="route('procurements.index')" :active="request()->routeIs('procurements.*')" class="sidebar-link">
                         <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
                         </svg>
                         Procurement
                     </x-nav-link>
-@endcan
-@can('manage documents')
+                    @endcan
+
+                    @can('manage documents')
                     <x-nav-link :href="route('documents.index')" :active="request()->routeIs('documents.*')" class="sidebar-link">
                         <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                         </svg>
                         Documents
                     </x-nav-link>
-@endcan
-@can('manage reports')
+                    @endcan
+
+                    @can('manage reports')
                     <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')" class="sidebar-link">
                         <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                         Reports
                     </x-nav-link>
-@endcan
-@can('view activity logs')
+                    @endcan
+
+                    @can('view activity logs')
                     <x-nav-link :href="route('activity-logs.index')" :active="request()->routeIs('activity-logs.*')" class="sidebar-link">
                         <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Activity Logs
                     </x-nav-link>
-@endcan
+                    @endcan
                 </nav>
 
                 <!-- Sidebar footer -->
@@ -193,66 +252,9 @@
             </main>
         </div>
     </div>
-
-    <!-- ConstructFlow Premium Sidebar Style -->
-    <style>
-        /* Sidebar background gradient */
-        .sidebar-bg {
-            background: linear-gradient(180deg, #12345A 0%, #0F2748 100%);
-        }
-
-        /* Sidebar Menu Links */
-        .sidebar-link {
-            @apply flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200;
-            color: #F8FAFC;
-            border-bottom: 1px solid rgba(255,255,255,.08);
-        }
-
-        /* Icons */
-        .sidebar-link svg {
-            width: 22px;
-            height: 22px;
-            color: #D1D5DB;
-            transition: all .2s ease;
-            flex-shrink: 0;
-        }
-
-        /* Hover */
-        .sidebar-link:hover {
-            background: #2C4D79;
-            color: #FFFFFF;
-            transform: translateX(3px);
-        }
-
-        .sidebar-link:hover svg {
-            color: #FFFFFF;
-        }
-
-        /* Active */
-        .sidebar-link.active {
-            background: linear-gradient(90deg, #0F9D8A 0%, #10B981 100%);
-            color: #FFFFFF;
-            font-weight: 600;
-            border-left: 4px solid #34D399;
-            border-bottom-color: transparent;
-            box-shadow: 0 8px 24px rgba(16,185,129,.25);
-        }
-
-        .sidebar-link.active svg {
-            color: #FFFFFF;
-        }
-
-        /* Focus accessibility */
-        .sidebar-link:focus-visible {
-            outline: 2px solid #34D399;
-            outline-offset: 2px;
-        }
-
-        /* Footer */
-        .sidebar-footer {
-            color: #94A3B8;
-            border-top: 1px solid rgba(255,255,255,.08);
-        }
-    </style>
 </body>
 </html>
+
+
+
+
