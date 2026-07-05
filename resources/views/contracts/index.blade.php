@@ -37,7 +37,7 @@
                             @forelse ($contracts as $contract)
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $contract->contract_number }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $contract->project->name }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $contract->project->name ?? '—' }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $contract->client ?? '—' }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${{ number_format($contract->contract_value, 2) }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -71,3 +71,8 @@
         </div>
     </div>
 </x-app-layout>
+
+
+
+
+
