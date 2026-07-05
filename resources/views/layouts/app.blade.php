@@ -7,7 +7,41 @@
     <title>{{ config('app.name', 'ConstructFlow') }} – Commercial Management</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    navy: '#1E3A5F',
+                    emerald: {
+                        50: '#ECFDF5',
+                        100: '#D1FAE5',
+                        200: '#A7F3D0',
+                        300: '#6EE7B7',
+                        400: '#34D399',
+                        500: '#10B981',
+                        600: '#059669',
+                        700: '#047857',
+                        800: '#065F46',
+                        900: '#064E3B',
+                    },
+                    surface: '#F8FAFC',
+                    'dark-slate': '#1F2937',
+                },
+            },
+        },
+    }
+</script>
+<!-- Simple CSS fallback for any remaining custom styles -->
+<style>
+    body { font-family: 'Inter', sans-serif; }
+    .sidebar-bg { background: linear-gradient(180deg, #12345A 0%, #0F2748 100%); }
+    /* Add any other custom styles you previously defined */
+</style>
+<!-- Inter font -->
+<link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
 </head>
 <body class="font-sans antialiased">
     <div class="min-h-screen flex bg-gray-100">
