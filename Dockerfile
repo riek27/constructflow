@@ -36,5 +36,11 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 # Install & build frontend assets
 RUN npm install && npm run build
 
-# Start Laravel’s built-in server
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=$PORT"]
+
+CMD php -S 0.0.0.0:$PORT -t public/
+
+
+
+
+
+
