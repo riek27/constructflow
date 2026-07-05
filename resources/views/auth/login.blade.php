@@ -6,7 +6,12 @@
     <title>ConstructFlow – Login</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
+    @if(app()->environment('production'))
+    <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}">
+    <script src="{{ asset('build/assets/app.js') }}" defer></script>
+@else
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+@endif
 </head>
 <body class="bg-gradient-to-br from-navy/5 to-emerald-500/10 min-h-screen flex items-center justify-center font-sans antialiased">
     <div class="w-full max-w-md mx-auto p-6">
