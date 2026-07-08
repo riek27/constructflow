@@ -41,7 +41,7 @@
     <!-- Alpine.js CDN (for dropdowns and mobile sidebar) -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    <!-- Custom CSS (pure CSS) -->
+    <!-- Custom CSS -->
     <style>
         body { font-family: 'Inter', sans-serif; }
         .sidebar-bg { background: linear-gradient(180deg, #12345A 0%, #0F2748 100%); }
@@ -92,20 +92,17 @@
             color: #94A3B8;
             border-top: 1px solid rgba(255,255,255,.08);
         }
-        /* Prevent page scroll when mobile sidebar is open */
         body.mobile-sidebar-open { overflow: hidden; }
     </style>
 </head>
 <body x-data="{ sidebarOpen: false }" :class="{ 'mobile-sidebar-open': sidebarOpen }" class="font-sans antialiased">
     <div class="min-h-screen flex bg-gray-100">
 
-        <!-- Mobile sidebar backdrop (visible on small screens) -->
-        <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false" class="fixed inset-0 z-20 bg-black bg-opacity-50 transition-opacity lg:hidden"></div>
+        <!-- Mobile backdrop (visible only when sidebar open) -->
+        <div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 z-20 bg-black bg-opacity-50 transition-opacity lg:hidden" x-cloak></div>
 
         <!-- Sidebar (shared between mobile and desktop) -->
         <div
-            x-show="sidebarOpen"
-            x-cloak
             @click.outside="sidebarOpen = false"
             class="fixed inset-y-0 left-0 z-30 w-64 sidebar-bg overflow-y-auto transform transition-transform duration-300 lg:relative lg:flex lg:flex-col lg:inset-y-0 lg:translate-x-0"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
@@ -209,9 +206,8 @@
 
         <!-- Main content area -->
         <div class="flex flex-col flex-1 lg:pl-64">
-            <!-- Top header (hamburger menu for mobile, profile) -->
+            <!-- Top header (hamburger for mobile, profile) -->
             <div class="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white shadow-sm">
-                <!-- Hamburger button (visible on mobile only) -->
                 <button @click="sidebarOpen = !sidebarOpen" type="button" class="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500 lg:hidden">
                     <span class="sr-only">Open sidebar</span>
                     <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -219,7 +215,6 @@
                     </svg>
                 </button>
 
-                <!-- Spacer -->
                 <div class="flex-1 px-4 flex justify-end">
                     <div class="ml-4 flex items-center md:ml-6">
                         <!-- Profile dropdown -->
