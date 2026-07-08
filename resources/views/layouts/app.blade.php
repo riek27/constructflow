@@ -204,8 +204,8 @@
             </div>
         </div>
 
-        <!-- Main content area -->
-        <div class="flex flex-col flex-1 lg:pl-64">
+        <!-- Main content area (no extra left padding) -->
+        <div class="flex flex-col flex-1">
             <!-- Top header (hamburger for mobile, profile) -->
             <div class="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white shadow-sm">
                 <button @click="sidebarOpen = !sidebarOpen" type="button" class="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500 lg:hidden">
