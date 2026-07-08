@@ -38,10 +38,10 @@
         }
     </script>
 
-    <!-- Alpine.js CDN (for dropdowns and interactive components) -->
+    <!-- Alpine.js CDN (for dropdowns and mobile sidebar) -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    <!-- Custom CSS (no @apply – pure CSS) -->
+    <!-- Custom CSS (pure CSS) -->
     <style>
         body { font-family: 'Inter', sans-serif; }
         .sidebar-bg { background: linear-gradient(180deg, #12345A 0%, #0F2748 100%); }
@@ -92,13 +92,24 @@
             color: #94A3B8;
             border-top: 1px solid rgba(255,255,255,.08);
         }
+        /* Prevent page scroll when mobile sidebar is open */
+        body.mobile-sidebar-open { overflow: hidden; }
     </style>
 </head>
-<body class="font-sans antialiased">
+<body x-data="{ sidebarOpen: false }" :class="{ 'mobile-sidebar-open': sidebarOpen }" class="font-sans antialiased">
     <div class="min-h-screen flex bg-gray-100">
 
-        <!-- Sidebar (dark) -->
-        <div class="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0">
+        <!-- Mobile sidebar backdrop (visible on small screens) -->
+        <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false" class="fixed inset-0 z-20 bg-black bg-opacity-50 transition-opacity lg:hidden"></div>
+
+        <!-- Sidebar (shared between mobile and desktop) -->
+        <div
+            x-show="sidebarOpen"
+            x-cloak
+            @click.outside="sidebarOpen = false"
+            class="fixed inset-y-0 left-0 z-30 w-64 sidebar-bg overflow-y-auto transform transition-transform duration-300 lg:relative lg:flex lg:flex-col lg:inset-y-0 lg:translate-x-0"
+            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+        >
             <div class="flex flex-col flex-grow sidebar-bg overflow-y-auto">
                 <!-- Logo -->
                 <div class="flex items-center h-16 px-6 bg-navy border-b border-gray-700">
@@ -123,78 +134,70 @@
                         </svg>
                         Projects
                     </x-nav-link>
-
-                    @can('manage users')
+@can('manage users')
                     <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')" class="sidebar-link">
                         <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
                         Users
                     </x-nav-link>
-                    @endcan
-
-                    @can('manage contracts')
+@endcan
+@can('manage contracts')
                     <x-nav-link :href="route('contracts.index')" :active="request()->routeIs('contracts.*')" class="sidebar-link">
                         <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                         Contracts
                     </x-nav-link>
-                    @endcan
-
-                    @can('manage variations')
+@endcan
+@can('manage variations')
                     <x-nav-link :href="route('variations.index')" :active="request()->routeIs('variations.*')" class="sidebar-link">
                         <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                         </svg>
                         Variations
                     </x-nav-link>
-                    @endcan
-
-                    @can('manage payments')
+@endcan
+@can('manage payments')
                     <x-nav-link :href="route('payments.index')" :active="request()->routeIs('payments.*')" class="sidebar-link">
                         <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
                         Payments
                     </x-nav-link>
-                    @endcan
-
-                    @can('manage procurement')
+@endcan
+@can('manage procurement')
                     <x-nav-link :href="route('procurements.index')" :active="request()->routeIs('procurements.*')" class="sidebar-link">
                         <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
                         </svg>
                         Procurement
                     </x-nav-link>
-                    @endcan
-
-                    @can('manage documents')
+@endcan
+@can('manage documents')
                     <x-nav-link :href="route('documents.index')" :active="request()->routeIs('documents.*')" class="sidebar-link">
                         <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                         </svg>
                         Documents
                     </x-nav-link>
-                    @endcan
-
-                    @can('manage reports')
+@endcan
+@can('manage reports')
                     <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')" class="sidebar-link">
                         <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                         Reports
                     </x-nav-link>
-                    @endcan
-
-                    @can('view activity logs')
+@endcan
+@can('view activity logs')
                     <x-nav-link :href="route('activity-logs.index')" :active="request()->routeIs('activity-logs.*')" class="sidebar-link">
                         <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Activity Logs
                     </x-nav-link>
-                    @endcan
+@endcan
                 </nav>
 
                 <!-- Sidebar footer -->
@@ -205,16 +208,18 @@
         </div>
 
         <!-- Main content area -->
-        <div class="lg:pl-64 flex flex-col flex-1">
-            <!-- Top header (mobile menu, profile) -->
+        <div class="flex flex-col flex-1 lg:pl-64">
+            <!-- Top header (hamburger menu for mobile, profile) -->
             <div class="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white shadow-sm">
-                <button type="button" class="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500 lg:hidden">
+                <!-- Hamburger button (visible on mobile only) -->
+                <button @click="sidebarOpen = !sidebarOpen" type="button" class="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500 lg:hidden">
                     <span class="sr-only">Open sidebar</span>
                     <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                 </button>
 
+                <!-- Spacer -->
                 <div class="flex-1 px-4 flex justify-end">
                     <div class="ml-4 flex items-center md:ml-6">
                         <!-- Profile dropdown -->
@@ -254,7 +259,3 @@
     </div>
 </body>
 </html>
-
-
-
-
